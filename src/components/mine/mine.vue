@@ -1,6 +1,6 @@
 <template>
   <div class="mine">
-    <v-header></v-header>
+    <v-header2></v-header2>
     <div class="divider"></div>
     <div class="list">
       <mu-list>
@@ -33,9 +33,11 @@
 
 <script type="text/ecmascript-6">
   import header from './header/header.vue';
+  import header2 from './header/header2.vue';
   export default {
     components: {
-      'v-header': header
+      'v-header': header,
+      'v-header2': header2
     }
   };
 </script>

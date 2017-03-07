@@ -43,6 +43,12 @@ let routes = [
     name: 'search',
     component: require('../components/search/search')
   }, {
+    path: '/login',
+    component: require('../components/common/login')
+  }, {
+    path: '/register',
+    component: require('../components/common/register')
+  }, {
     path: '*', redirect: '/index/home/new'
   }
 ];

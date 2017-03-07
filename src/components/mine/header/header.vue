@@ -19,13 +19,15 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .header
-    background url("./userbg.jpg") no-repeat
+    width 100%
+    height 134px
+    padding 21px 12px 21px 12px
+    background url("./userbg.jpg") repeat-y
     .content-wrap
-      padding 24px 12px 18px 12px
       text-align center
       font-size 0
       .avatar
-        vertical-align middle
+        /*vertical-align middle*/
         &>img
           border-radius 32px
           border 2px solid #ff9590
