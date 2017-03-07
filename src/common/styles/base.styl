@@ -1,0 +1,30 @@
+primaryColorA = #03a9f4
+primaryColorB = #222222
+
+body, html
+  line-height: 1
+  font-weight: 200
+  font-size 14px
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif
+  &::-webkit-scrollbar
+    width 0px
+
+border-1px($color)
+  position relative
+  &::after
+    display block
+    position absolute
+    left 0
+    bottom 0
+    width 100%
+    border-top 1px solid $color
+    content ' '
+
+add-title($title)
+  position relative
+  &::after
+    display block
+    position absolute
+    left 15px
+    bottom -20px
+    content $title
