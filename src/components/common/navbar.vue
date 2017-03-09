@@ -29,8 +29,6 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  #app
-    position relative
     .navbar
       position fixed
       width 100%

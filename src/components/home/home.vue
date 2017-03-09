@@ -41,6 +41,23 @@
         bottomPop: false
       };
     },
+    created () {
+      // 当created函数时监测路由信息,防止页面刷新tab高亮错误
+      let tmpArr = this.$route.path.split('/');
+      if (tmpArr[2] === 'home') {
+        this.handleTabChange(tmpArr[3]);
+      }
+    },
+    // watch函数监测路由的变化,保持tab面板的高亮位置正确
+    watch: {
+      '$route' (to, from) {
+        const path = to.path;
+        let tmpArr = path.split('/');
+        if (tmpArr[2] === 'home') {
+          this.handleTabChange(tmpArr[3]);
+        }
+      }
+    },
     methods: {
       handleTabChange (val) {
         this.activeTab = val;
@@ -60,7 +77,12 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import '../../common/styles/base.styl';
   .home
+    padding-top 40px
     .search
+      position fixed
+      top 0
+      left 0
+      z-index 200
       padding 5px 0 5px 0
       width 100%
       height 40px

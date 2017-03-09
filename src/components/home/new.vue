@@ -38,6 +38,8 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   #newitem
+    border 1px solid transparent
+    background-color RGB(229,229,229)
     .card-zone
       font-size 0
       &>li
@@ -46,7 +48,7 @@
         height 130px
         margin 10px 0 10px 0
         padding 15px
-        background #f3f3f3
+        background #fff
         .picture
           display inline-block
           flex 0 0 100px

@@ -1,14 +1,16 @@
 <template>
   <div id="nearby">
-    <ul>
-      <template v-for="(item, index) in goods">
-        <template v-if="index == 7">
-          <li v-for="food in item.foods">
-            <img width="100px" height="70px" :src="food.image" alt="">
-            {{food.name}}/{{food.description}}
-          </li>
-        </template>
-      </template>
+    <ul class="card-zone">
+      <li v-for="food in goods">
+        {{ food.pName }}
+        <div class="picture">
+          <img width="100px" height="100px" :src="food.albumPath" alt="">
+        </div>
+        <div class="content-wrapper">
+          <span class="price">￥{{food.iPrice}}</span><br>
+          <span class="description">{{food.pName}}</span>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
@@ -17,20 +19,47 @@
   export default {
     data() {
       return {
-        goods: {}
+        goods: []
       };
     },
     created() {
-      this.$http.get('/api/goods').then((response) => {
-        if (response.data.errno === 0) {
-          this.goods = response.data.data;
-//                console.log(this.goods);
-        }
+      this.$http.post('http://www.imac1.pw/firstpage.php').then((response) => {
+        let temp = response.data;
+//        console.log(temp);
+        this.goods = temp;
       });
     }
   };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-
+  #nearby
+    border 1px solid transparent
+    background-color RGB(229,229,229)
+    .card-zone
+      font-size 0
+      &>li
+        display flex
+        width 100%
+        height 130px
+        margin 10px 0 10px 0
+        padding 15px
+        background #fff
+        .picture
+          display inline-block
+          flex 0 0 100px
+          vertical-align top
+        .content-wrapper
+          display inline-block
+          flex 1
+          line-height 30px
+          text-align center
+          .price
+            color red
+            font-weight bold
+            font-size large
+          .description
+            line-height 20px
+            font-size 14px
+            /*font-weight bold*/
 </style>

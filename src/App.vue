@@ -11,5 +11,6 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-
+  #app
+    min-height 100%
 </style>

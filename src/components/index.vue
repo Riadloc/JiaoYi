@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div class="main">
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
-      <div class="navbar">
-        <v-navbar @transfer="getVal"></v-navbar>
-      </div>
+  <div class="main">
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+    <div class="navbar">
+      <v-navbar @transfer="getVal"></v-navbar>
     </div>
   </div>
 </template>
@@ -32,7 +30,6 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  #app
-    min-height 100%
+  .main
     padding-bottom 60px
 </style>
