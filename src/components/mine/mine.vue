@@ -1,24 +1,17 @@
 <template>
   <div class="mine">
-    <v-header2></v-header2>
+    <v-header v-if="userInfo.email" :userInfo="userInfo"></v-header>
+    <v-header2 v-if="!userInfo.email"></v-header2>
     <mu-list>
-      <mu-list-item title="我发布的">
-        <mu-icon slot="left" value="inbox"></mu-icon>
-      </mu-list-item>
-      <mu-divider />
-      <mu-list-item title="我买到的">
-        <mu-icon slot="left" value="send"></mu-icon>
-      </mu-list-item>
-      <mu-divider />
-      <mu-list-item title="我卖出的">
-        <mu-icon slot="left" value="drafts"></mu-icon>
-      </mu-list-item>
-      <mu-divider />
-      <mu-list-item title="我收藏的">
-        <mu-icon slot="left" value="grade"></mu-icon>
-      </mu-list-item>
-      <mu-divider />
-      <mu-list-item title="设置">
+      <template v-for="(item,index) in values">
+        <router-link :to="{'collect', params: {index,title: titles[index]}}">
+          <mu-list-item :title="titles[index]">
+            <i :class="'icon-'+values[index]" class="iconfont" slot="left"></i>
+          </mu-list-item>
+        </router-link>
+        <mu-divider />
+      </template>
+      <mu-list-item title="设置" @click="goSetting">
         <mu-icon slot="left" value="settings"></mu-icon>
       </mu-list-item>
       <mu-divider />
@@ -30,10 +23,27 @@
 <script type="text/ecmascript-6">
   import header from './header/header.vue';
   import header2 from './header/header2.vue';
+  import {mapGetters} from 'vuex';
   export default {
     components: {
       'v-header': header,
       'v-header2': header2
+    },
+    data() {
+      return {
+        values: ['fabu', 'womaidaode', 'biaoxingfill', 'goods'],
+        titles: ['我发布的', '我买到的', '我的收藏', '我的购物车']
+      };
+    },
+    computed: {
+      ...mapGetters({
+        userInfo: 'getUserInfo'
+      })
+    },
+    methods: {
+      goSetting() {
+        this.$router.push('/setting');
+      }
     }
   };
 </script>
@@ -42,7 +52,7 @@
   .mine
     width 100%
 
-  .mu-item-wrapper
-    &:nth-last-child(0)
-      margin-top 10px
+  /*.mu-item-wrapper*/
+    /*:last-child*/
+      /*margin-top 10px*/
 </style>

@@ -1,69 +1,81 @@
 <template>
-  <div id="newitem">
+  <div id="new">
     <ul class="card-zone">
-      <template v-for="(item, index) in goods">
-        <template v-if="index == 8">
-          <li v-for="food in item.foods">
-            <div class="picture">
-              <img width="100px" height="100px" :src="food.image" alt="">
+      <li v-for="good in goods" @click="linkToDetails(good)">
+        <!--<router-link :to="{name: 'details',params: { id: good.id }}">-->
+        <div class="picture">
+          <img width="100px" height="100px" v-lazy="good.albumPath" alt="">
+        </div>
+        <div class="content-wrapper">
+          <div class="card-header">
+            <img src="../../../static/images/avatar_default.svg" alt="" class="avatar">
+            <div class="sellerInfo">
+              <span class="nickname">{{good.nickname}}</span>
+              <span class="region">{{good.address}}</span>
             </div>
-            <div class="content-wrapper">
-              <span class="price">￥{{food.price}}</span><br>
-              <span class="description">{{food.name}} | {{food.description}}</span>
-            </div>
-          </li>
-        </template>
-      </template>
+            <span class="price">￥{{good.price}}</span>
+          </div>
+          <p class="description">{{good.description}}</p>
+        </div>
+        <!--</router-link>-->
+      </li>
     </ul>
+    <mu-infinite-scroll :scroller="scroller" :loading="loading" loadingText="加载中..." @load="loadMore"/>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   export default {
     data() {
-        return {
-            goods: {}
-        };
+      return {
+        scroller: null,
+        goods: [],
+        offset: 0,
+        loading: false
+      };
     },
     created() {
-        this.$http.get('/api/goods').then((response) => {
-            if (response.data.errno === 0) {
-                this.goods = response.data.data;
-//                console.log(this.goods);
-            }
+      this.get();
+    },
+    mounted() {
+      this.scroller = document.getElementsByClassName('home')[0];
+    },
+    beforeRouteLeave: (to, from, next) => {
+      if (to.name === 'details') {
+        window.window.sessionStorage.scrollTop = document.getElementsByClassName('home')[0].scrollTop;
+      }
+      next();
+    },
+    methods: {
+      get() {
+        this.loading = true;
+        this.$http.post('/info/firstpage.php', {
+          pageid: (this.offset / 6) + 1,
+          type: '0'
+        }).then((response) => {
+          let temp = response.data;
+          for (let i = 0; i < temp.length; i++) {
+            this.goods.push(temp[i]);
+          }
+          this.offset = this.offset + 6;
+          this.loading = false;
         });
+      },
+      linkToDetails(e) {
+        this.$router.push({name: 'details', params: { id: e.id }});
+      },
+      loadMore () {
+        if (this.offset <= 40) {
+          this.get();
+        } else {
+          return false;
+        }
+      }
     }
   };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  #newitem
-    border 1px solid transparent
-    background-color RGB(229,229,229)
-    .card-zone
-      font-size 0
-      &>li
-        display flex
-        width 100%
-        height 130px
-        margin 10px 0 10px 0
-        padding 15px
-        background #fff
-        .picture
-          display inline-block
-          flex 0 0 100px
-          vertical-align top
-        .content-wrapper
-          display inline-block
-          flex 1
-          line-height 50px
-          text-align center
-          .price
-            color red
-            font-weight bold
-            font-size large
-          .description
-            line-height 20px
-            font-size 14px
-            font-weight bold
+  #new
+    background-color #e5e5e5
 </style>

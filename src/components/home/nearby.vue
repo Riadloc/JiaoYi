@@ -1,17 +1,26 @@
 <template>
   <div id="nearby">
     <ul class="card-zone">
-      <li v-for="food in goods">
-        {{ food.pName }}
-        <div class="picture">
-          <img width="100px" height="100px" :src="food.albumPath" alt="">
-        </div>
-        <div class="content-wrapper">
-          <span class="price">￥{{food.iPrice}}</span><br>
-          <span class="description">{{food.pName}}</span>
-        </div>
+      <li v-for="good in goods" @click="linkToDetails(good)">
+        <!--<router-link :to="{name: 'details',params: { id: good.id }}">-->
+          <div class="picture">
+            <img width="100px" height="100px" v-lazy="good.albumPath" alt="">
+          </div>
+          <div class="content-wrapper">
+            <div class="card-header">
+              <img src="../../../static/images/avatar_default.svg" alt="" class="avatar">
+              <div class="sellerInfo">
+                <span class="nickname">{{good.nickname}}</span>
+                <span class="region">{{good.address}}</span>
+              </div>
+              <span class="price">￥{{good.price}}</span>
+            </div>
+            <p class="description">{{good.description}}</p>
+          </div>
+        <!--</router-link>-->
       </li>
     </ul>
+    <mu-infinite-scroll :scroller="scroller" :loading="loading" loadingText="加载中..." @load="loadMore"/>
   </div>
 </template>
 
@@ -19,47 +28,54 @@
   export default {
     data() {
       return {
-        goods: []
+        scroller: null,
+        goods: [],
+        offset: 0,
+        loading: false
       };
     },
     created() {
-      this.$http.post('http://www.imac1.pw/firstpage.php').then((response) => {
-        let temp = response.data;
-//        console.log(temp);
-        this.goods = temp;
-      });
+      this.get();
+    },
+    mounted() {
+      this.scroller = document.getElementsByClassName('home')[0];
+    },
+    beforeRouteLeave: (to, from, next) => {
+      if (to.name === 'details') {
+        window.window.sessionStorage.scrollTop = document.getElementsByClassName('home')[0].scrollTop;
+      }
+      next();
+    },
+    methods: {
+      get() {
+        this.loading = true;
+        this.$http.post('/info/firstpage.php', {
+          pageid: (this.offset / 6) + 1,
+          type: '1'
+        }).then((response) => {
+          let temp = response.data;
+          for (let i = 0; i < temp.length; i++) {
+            this.goods.push(temp[i]);
+          }
+          this.offset = this.offset + 6;
+          this.loading = false;
+        });
+      },
+      linkToDetails(e) {
+        this.$router.push({name: 'details', params: { id: e.id }});
+      },
+      loadMore () {
+        if (this.offset <= 40) {
+          this.get();
+        } else {
+          return false;
+        }
+      }
     }
   };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
   #nearby
-    border 1px solid transparent
-    background-color RGB(229,229,229)
-    .card-zone
-      font-size 0
-      &>li
-        display flex
-        width 100%
-        height 130px
-        margin 10px 0 10px 0
-        padding 15px
-        background #fff
-        .picture
-          display inline-block
-          flex 0 0 100px
-          vertical-align top
-        .content-wrapper
-          display inline-block
-          flex 1
-          line-height 30px
-          text-align center
-          .price
-            color red
-            font-weight bold
-            font-size large
-          .description
-            line-height 20px
-            font-size 14px
-            /*font-weight bold*/
+    background-color #e5e5e5
 </style>
